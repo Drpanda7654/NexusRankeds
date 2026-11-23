@@ -378,24 +378,22 @@
 
     const TIER_LIST = ["HT1", "LT1", "HT2", "LT2", "HT3", "LT3"];
 
-        const MODE_BRACKETS = {
-      uhc:     { HT1: [], LT1: [], HT2: ["Pandax7654"], LT2: [], HT3: [], LT3: [] },
-      sword:   { HT1: [], LT1: [], HT2: [], LT2: ["Pandax7654"], HT3: [], LT3: [] },
+            const MODE_BRACKETS = {
+      uhc:     { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] },
+      sword:   { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] },
       axe:     { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] },
       crystal: { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] }
     };
 
-    const PVP_PLAYERS = [
-      { name: "Pandax7654", skin: DEFAULT_SKIN, uhc: "HT2", sword: "LT2", axe: "UNRANKED", crystal: "UNRANKED" },
-      ...Array.from({ length: 19 }, () => ({
-        name: "",
-        skin: DEFAULT_SKIN,
-        uhc: "UNRANKED",
-        sword: "UNRANKED",
-        axe: "UNRANKED",
-        crystal: "UNRANKED"
-      }))
-    ];
+    const PVP_PLAYERS = Array.from({ length: 20 }, () => ({
+      name: "",
+      skin: DEFAULT_SKIN,
+      uhc: "UNRANKED",
+      sword: "UNRANKED",
+      axe: "UNRANKED",
+      crystal: "UNRANKED"
+    }));
+    
     
 
     // Parkour (mapa en espiral por clip)
