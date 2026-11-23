@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus tier</title>
+  <style>
+    :root {
+      --bg: #0e1015;
+      --card: #161a23;
+      --card-hover: #1d222e;
+      --border: #262c3a;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px 14px 44px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: left;
+      margin-bottom: 28px;
+      padding: 12px 14px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.08) 0%, rgba(22, 26, 35, 0.35) 100%);
+      border-left: 4px solid var(--accent);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0 10px 10px 0;
+    }
+
+    header h1 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      text-align: left;
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 9px;
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background: var(--card-hover);
+      border-color: var(--accent);
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .mode-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 0.12s, background 0.15s, border-color 0.15s;
+    }
+
+    .mode-link:hover {
+      background: var(--card-hover);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .mode-link-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .mode-link-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .section-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .tier-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .tier-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .tier-box-header {
+      padding: 8px 10px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tier-box-list {
+      list-style: none;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 84px;
+    }
+
+    .tier-box-list li {
+      font-size: 0.86rem;
+      color: var(--text);
+      padding: 4px 6px;
+      background: #10131a;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .empty-slot {
+      color: var(--muted) !important;
+      font-style: italic;
+    }
+
+    .table-headers {
+      display: grid;
+      grid-template-columns: 70px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 14px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .col-rank { text-align: left; }
+    .col-name { text-align: left; padding-left: 66px; }
+    .col-tiers { text-align: right; padding-right: 12px; }
+
+    .leaderboard {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .player-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: background 0.15s;
+    }
+
+    .player-card:hover {
+      background: var(--card-hover);
+    }
+
+    .player-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .rank-num {
+      font-weight: 800;
+      font-size: 1.05rem;
+      width: 44px;
+      text-align: left;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .rank-1 { color: #fbbf24; }
+    .rank-2 { color: #cbd5e1; }
+    .rank-3 { color: #d97706; }
+
+    .skin-bust {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      background: #0b0d12;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      object-position: top center;
+      flex-shrink: 0;
+    }
+
+    .player-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .player-name {
+      font-weight: 700;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 1.2rem;
+    }
+
+    .player-points {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .tiers-box {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tier-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #10131a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 8px;
+      min-width: 68px;
+    }
+
+    .tier-mode {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .badge {
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    /* Tiers PvP */
+    .HT1 { background: #f59e0b; color: #000; }
+    .LT1 { background: #d97706; color: #fff; }
+    .HT2 { background: #38bdf8; color: #000; }
+    .LT2 { background: #0284c7; color: #fff; }
+    .HT3 { background: #34d399; color: #000; }
+    .LT3 { background: #059669; color: #fff; }
+    .HT4, .LT4 { background: #64748b; color: #fff; }
+    .HT5, .LT5 { background: #334155; color: #cbd5e1; }
+    .UNRANKED { background: #1e293b; color: #94a3b8; }
+
+    /* Rangos Parkour y Construcción */
+    .Principiante  { background: #334155; color: #e2e8f0; }
+    .Novato        { background: #475569; color: #f8fafc; }
+    .Promedio      { background: #0284c7; color: #fff; }
+    .Habil         { background: #059669; color: #fff; }
+    .Experimentado { background: #0d9488; color: #fff; }
+    .Profesional   { background: #d97706; color: #fff; }
+    .Artista       { background: #f59e0b; color: #000; }
+    .SinClasificar { background: #1e293b; color: #94a3b8; }
+
+    @media (max-width: 680px) {
+      .table-headers { display: none; }
+      .player-card { flex-direction: column; align-items: flex-start; }
+      .player-left { width: 100%; }
+      .tiers-box { width: 100%; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app"></div>
+
+  <script>
+    const STEVE_UUID = "8667ba71b85a4004af54457a9734eed7";
+    const DEFAULT_SKIN = `https://vzge.me/bust/128/${STEVE_UUID}`;
+
+    const PVP_MODES = {
+      uhc: {
+        key: "uhc",
+        title: "Nexus tier — UHC",
+        subtitle: "Clasificación y tiers de la modalidad UHC",
+        desc: "Modalidad PvP"
+      },
+      sword: {
+        key: "sword",
+        title: "Nexus tier — Sword",
+        subtitle: "Clasificación y tiers de la modalidad Sword",
+        desc: "Modalidad PvP"
+      },
+      axe: {
+        key: "axe",
+        title: "Nexus tier — Axe",
+        subtitle: "Clasificación y tiers de la modalidad Axe",
+        desc: "Modalidad PvP"
+      },
+      crystal: {
+        key: "crystal",
+        title: "Nexus tier — Crystal",
+        subtitle: "Clasificación y tiers de la modalidad Crystal",
+        desc: "Modalidad PvP"
+      }
+    };
+
+    const TIER_POINTS = {
+      HT1: 60, LT1: 45,
+      HT2: 30, LT2: 20,
+      HT3: 10, LT3: 6,
+      HT4: 4,  LT4: 3,
+      HT5: 2,  LT5: 1,
+      UNRANKED: 0
+    };
+
+    const TIER_LIST = ["HT1", "LT1", "HT2", "LT2", "HT3", "LT3"];
+
+    const MODE_BRACKETS = {
+      uhc:     { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] },
+      sword:   { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] },
+      axe:     { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] },
+      crystal: { HT1: [], LT1: [], HT2: [], LT2: [], HT3: [], LT3: [] }
+    };
+
+    const PVP_PLAYERS = Array.from({ length: 20 }, () => ({
+      name: "",
+      skin: DEFAULT_SKIN,
+      uhc: "UNRANKED",
+      sword: "UNRANKED",
+      axe: "UNRANKED",
+      crystal: "UNRANKED"
+    }));
+
+    // Parkour (mapa en espiral por clip)
+    const PARKOUR_POINTS = {
+      Profesional: 80,
+      Habil: 55,
+      Promedio: 30,
+      Novato: 15,
+      Principiante: 5,
+      SinClasificar: 0
+    };
+
+    const PARKOUR_LABELS = {
+      Profesional: "Profesional",
+      Habil: "Hábil",
+      Promedio: "Promedio",
+      Novato: "Novato",
+      Principiante: "Principiante",
+      SinClasificar: "Sin clasificar"
+    };
+
+    const PARKOUR_PLAYERS = Array.from({ length: 20 }, () => ({
+      name: "",
+      skin: DEFAULT_SKIN,
+      rank: "SinClasificar"
+    }));
+
+    // Construcción (criterio único)
+    const BUILD_POINTS = {
+      Artista: 100,
+      Profesional: 75,
+      Experimentado: 50,
+      Promedio: 30,
+      Novato: 15,
+      Principiante: 5,
+      SinClasificar: 0
+    };
+
+    const BUILD_LABELS = {
+      Artista: "Artista",
+      Profesional: "Profesional",
+      Experimentado: "Experimentado",
+      Promedio: "Promedio",
+      Novato: "Novato",
+      Principiante: "Principiante",
+      SinClasificar: "Sin clasificar"
+    };
+
+    const BUILD_PLAYERS = Array.from({ length: 20 }, () => ({
+      name: "",
+      skin: DEFAULT_SKIN,
+      level: "SinClasificar"
+    }));
+
+    function getActiveRoute() {
+      const hash = (window.location.hash || "").replace("#", "").toLowerCase();
+      if (PVP_MODES[hash] || hash === "parkour" || hash === "construccion") {
+        return hash;
+      }
+      return "home";
+    }
+
+    function getPvpPoints(player, modeKey) {
+      if (modeKey && PVP_MODES[modeKey]) {
+        return TIER_POINTS[player[modeKey]] || 0;
+      }
+      return (TIER_POINTS[player.uhc] || 0) +
+             (TIER_POINTS[player.sword] || 0) +
+             (TIER_POINTS[player.axe] || 0) +
+             (TIER_POINTS[player.crystal] || 0);
+    }
+
+    function renderBracketsHtml(modeKey) {
+      const brackets = MODE_BRACKETS[modeKey] || {};
+      return `
+        <div class="section-label">Posiciones por tier (${modeKey.toUpperCase()})</div>
+        <div class="tier-columns">
+          ${TIER_LIST.map(tier => {
+            const playersInTier = (brackets[tier] || []).filter(n => n && n.trim());
+            const itemsHtml = playersInTier.length
+              ? playersInTier.map(name => `<li>${name}</li>`).join("")
+              : `<li class="empty-slot">—</li>`;
+
+            return `
+              <div class="tier-box">
+                <div class="tier-box-header badge ${tier}">${tier}</div>
+                <ul class="tier-box-list">${itemsHtml}</ul>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderPvpLeaderboardHtml(modeKey) {
+      const rankedPlayers = [...PVP_PLAYERS]
+        .map((p, originalIndex) => ({
+          ...p,
+          originalIndex,
+          pts: getPvpPoints(p, modeKey)
+        }))
+        .sort((a, b) => {
+          if (b.pts !== a.pts) return b.pts - a.pts;
+          return a.originalIndex - b.originalIndex;
+        });
+
+      return `
+        <div class="table-headers">
+          <div class="col-rank">Puesto</div>
+          <div class="col-name">Nombre</div>
+          <div class="col-tiers">Rangos</div>
+        </div>
+
+        <div class="leaderboard">
+          ${rankedPlayers.map((p, index) => {
+            const pos = index + 1;
+            const displayName = p.name.trim() ? p.name : "—";
+            const skinUrl = p.skin && p.skin.trim() ? p.skin : DEFAULT_SKIN;
+            const tiersToShow = modeKey && PVP_MODES[modeKey]
+              ? [modeKey]
+              : ["uhc", "sword", "axe", "crystal"];
+
+            const badgesHtml = tiersToShow.map(m => `
+              <div class="tier-item">
+                <span class="tier-mode">${m.toUpperCase()}</span>
+                <span class="badge ${p[m]}">${p[m]}</span>
+              </div>
+            `).join("");
+
+            return `
+              <div class="player-card">
+                <div class="player-left">
+                  <div class="rank-num rank-${pos}">#${pos}</div>
+                  <img class="skin-bust" src="${skinUrl}" alt="${displayName}" onerror="this.onerror=null;this.src='${DEFAULT_SKIN}'">
+                  <div class="player-info">
+                    <div class="player-name">${displayName}</div>
+                    <div class="player-points">${p.pts} pts</div>
+                  </div>
+                </div>
+                <div class="tiers-box">${badgesHtml}</div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderSingleCriteriaHtml(list, pointsMap, labelsMap, fieldName, headerRight) {
+      const sorted = [...list]
+        .map((p, idx) => {
+          const raw = p[fieldName];
+          const key = labelsMap[raw] ? raw : "SinClasificar";
+          return {
+            ...p,
+            idx,
+            key,
+            label: labelsMap[key],
+            pts: pointsMap[key] ?? 0
+          };
+        })
+        .sort((a, b) => {
+          if (b.pts !== a.pts) return b.pts - a.pts;
+          return a.idx - b.idx;
+        });
+
+      return `
+        <div class="table-headers">
+          <div class="col-rank">Puesto</div>
+          <div class="col-name">Nombre</div>
+          <div class="col-tiers">${headerRight}</div>
+        </div>
+
+        <div class="leaderboard">
+          ${sorted.map((p, i) => {
+            const pos = i + 1;
+            const displayName = p.name.trim() ? p.name : "—";
+            const skinUrl = p.skin && p.skin.trim() ? p.skin : DEFAULT_SKIN;
+
+            return `
+              <div class="player-card">
+                <div class="player-left">
+                  <div class="rank-num rank-${pos}">#${pos}</div>
+                  <img class="skin-bust" src="${skinUrl}" alt="${displayName}" onerror="this.onerror=null;this.src='${DEFAULT_SKIN}'">
+                  <div class="player-info">
+                    <div class="player-name">${displayName}</div>
+                    <div class="player-points">${p.pts} pts</div>
+                  </div>
+                </div>
+
+                <span class="badge ${p.key}">${p.label}</span>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function backButtonHtml() {
+      return `<div class="top-nav"><a class="back-btn" href="#">← Inicio (Nexus tier)</a></div>`;
+    }
+
+    function renderApp() {
+      const route = getActiveRoute();
+      const app = document.getElementById("app");
+
+      if (route === "home") {
+        document.title = "Nexus tier";
+        app.innerHTML = `
+          <header>
+            <h1>Nexus tier</h1>
+            <p>Selecciona una modalidad para abrir su sección de clasificación</p>
+          </header>
+
+          <div class="mode-grid">
+            ${Object.values(PVP_MODES).map(m => `
+              <a class="mode-link" href="#${m.key}">
+                <span class="mode-link-title">${m.key.toUpperCase()}</span>
+                <span class="mode-link-sub">${m.desc}</span>
+              </a>
+            `).join("")}
+            <a class="mode-link" href="#parkour">
+              <span class="mode-link-title">PARKOUR</span>
+              <span class="mode-link-sub">Espiral · Por clip</span>
+            </a>
+            <a class="mode-link" href="#construccion">
+              <span class="mode-link-title">CONSTRUCCIÓN</span>
+              <span class="mode-link-sub">1 criterio · Niveles</span>
+            </a>
+          </div>
+
+          ${renderPvpLeaderboardHtml(null)}
+        `;
+      } else if (PVP_MODES[route]) {
+        const mode = PVP_MODES[route];
+        document.title = mode.title;
+        app.innerHTML = `
+          ${backButtonHtml()}
+          <header>
+            <h1>${mode.title}</h1>
+            <p>${mode.subtitle}</p>
+          </header>
+          ${renderBracketsHtml(mode.key)}
+          ${renderPvpLeaderboardHtml(mode.key)}
+        `;
+      } else if (route === "parkour") {
+        document.title = "Nexus tier — Parkour";
+        app.innerHTML = `
+          ${backButtonHtml()}
+          <header>
+            <h1>Nexus tier — Parkour</h1>
+            <p>Mapa en espiral · Principiante, Novato, Promedio, Hábil y Profesional</p>
+          </header>
+          ${renderSingleCriteriaHtml(PARKOUR_PLAYERS, PARKOUR_POINTS, PARKOUR_LABELS, "rank", "Rango")}
+        `;
+      } else if (route === "construccion") {
+        document.title = "Nexus tier — Construcción";
+        app.innerHTML = `
+          ${backButtonHtml()}
+          <header>
+            <h1>Nexus tier — Construcción</h1>
+            <p>Clasificación por nivel: Principiante, Novato, Promedio, Experimentado, Profesional y Artista</p>
+          </header>
+          ${renderSingleCriteriaHtml(BUILD_PLAYERS, BUILD_POINTS, BUILD_LABELS, "level", "Nivel")}
+        `;
+      }
+    }
+
+    window.addEventListener("hashchange", renderApp);
+    renderApp();
+  </script>
+</body>
+</html>
